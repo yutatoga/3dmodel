@@ -21,7 +21,7 @@
 
 
   function Particle(x, y, z, damping){
-    this.position = new THREE.Vector3(x ,y, z)
+    this.position = new THREE.Vector3(x ,y, z);
     this.velocity = new THREE.Vector3(THREE.Math.randFloat(-0.01, 0.01), THREE.Math.randFloat(-0.01, -0.01), 0);
     this.velocity.setLength(THREE.Math.randFloat(0.02, 0.05));
     this.acceleration = new THREE.Vector3(0, 0, 0);
