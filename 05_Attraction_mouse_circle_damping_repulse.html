@@ -22,14 +22,17 @@
 
   function Particle(x, y, z, damping){
     this.positionCurrent = new THREE.Vector3(x ,y, z);
+    this.positionInitial = new THREE.Vector3(x, y, z);
     this.velocity = new THREE.Vector3();
     this.acceleration = new THREE.Vector3(0, 0, 0);
     this.damping = damping || 1.0;
 
+    // Standard Euler integration
     this.update = function(){
-      this.positionCurrent.add(this.velocity);
       this.velocity.add(this.acceleration);
       this.velocity.multiplyScalar(this.damping);
+      this.positionCurrent.add(this.velocity);
+      this.acceleration.multiplyScalar(0);
     }
 
     this.attracted = function(target){
@@ -122,7 +125,7 @@
     // particle
     var particleNumber = 1000;
     for (var i = 0; i < particleNumber; i++){
-      var particle = new Particle(THREE.Math.randFloat(-5, 5), THREE.Math.randFloat(-5, 5), 0, 0.95);
+      var particle = new Particle(THREE.Math.randFloat(-5, 5), THREE.Math.randFloat(-5, 5), 0, 0.9);
       particles.push(particle);
       geometry.vertices.push(particle.positionCurrent);
     }
