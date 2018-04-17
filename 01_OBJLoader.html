@@ -126,10 +126,14 @@
         // mesh bunny
         object.position.set(0, 0, 0);
         object.name = "bunnyMesh";
+        object.visible = settings.isMeshVisible;
         scene.add(object);
 
         object.traverse(function (child){
           if (child instanceof THREE.Mesh){
+            // material for bunnyMesh
+            child.material.wireframe = settings.enableWireframe;
+
             // points bunny
             var pointsMaterial = new THREE.PointsMaterial( {
               color: 0xFF0000,
