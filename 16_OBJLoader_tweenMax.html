@@ -42,11 +42,44 @@
       var objectPoints = scene.getObjectByName("bunnyPoints");
       TweenMax.to(objectPoints.position, 1, {x: 0, y: 0, z: 0});
     }
+
+    this.tweenPositionInitial = function(){
+      var objectPoints = scene.getObjectByName("bunnyPoints");
+      var positionArrayCurrent = objectPoints.geometry.attributes.position.array;
+
+      TweenMax.to(
+        positionArrayCurrent,
+        3.0,
+        positionArrayInitial
+      );
+
+      positionArrayInitial.onUpdate = function(){
+        objectPoints.geometry.attributes.position.needsUpdate = true;
+      }
+    }
+
+    this.tweenPositionTarget = function(){
+      var objectPoints = scene.getObjectByName("bunnyPoints");
+      var position = objectPoints.geometry.attributes.position.array;
+
+      TweenMax.to(
+        position,
+        3.0,
+        positionArrayTarget
+      );
+
+      positionArrayTarget.onUpdate = function(){
+        objectPoints.geometry.attributes.position.needsUpdate = true;
+      }
+    }
   };
   var settings = new Settings();
   var gui = new dat.GUI();
 
   var scene, camera, renderer;
+
+  var positionArrayInitial = [];
+  var positionArrayTarget = [];
 
   // debug
   var stats;
@@ -99,6 +132,8 @@
     var guiFolderTween = gui.addFolder('Tween');
     guiFolderTween.add(settings, 'tweenMove');
     guiFolderTween.add(settings, 'tweenOrigin');
+    guiFolderTween.add(settings, 'tweenPositionInitial');
+    guiFolderTween.add(settings, 'tweenPositionTarget');
     guiFolderTween.open();
 
     // scene
@@ -151,6 +186,12 @@
           if (child instanceof THREE.Mesh){
             // material for bunnyMesh
             child.material.wireframe = settings.enableWireframe;
+
+            // save initial point array
+            positionArrayInitial = child.geometry.attributes.position.array.slice();
+            for (var i = 0; i < positionArrayInitial.length; i++){
+              positionArrayTarget[i] = (Math.random() - 0.5) * 3.0;
+            }
 
             // points bunny
             var pointsMaterial = new THREE.PointsMaterial( {
