@@ -173,7 +173,7 @@
     // load a resource
     loaderOBJ.load(
       // resource URL
-      '/model/bunny.obj',
+      '/model/bunny_low.obj',
       // called when resource is loaded
       function (object) {
         // mesh bunny
@@ -206,6 +206,27 @@
             points.name = "bunnyPoints";
             points.visible = settings.isPointsVisible;
             scene.add(points);
+
+            // export json data
+            var positionArrayTriangleCenter = new Float32Array(Math.floor(positionArrayInitial.length / 3));
+            for (var i = 0; i < positionArrayInitial.length / 9; i++){
+              positionArrayTriangleCenter[3 * i + 0] = ( positionArrayInitial[9 * i + 0] + positionArrayInitial[9 * i + 3] + positionArrayInitial[9 * i + 6] ) / 3.0;
+              positionArrayTriangleCenter[3 * i + 1] = ( positionArrayInitial[9 * i + 1] + positionArrayInitial[9 * i + 4] + positionArrayInitial[9 * i + 7] ) / 3.0;
+              positionArrayTriangleCenter[3 * i + 2] = ( positionArrayInitial[9 * i + 2] + positionArrayInitial[9 * i + 5] + positionArrayInitial[9 * i + 8] ) / 3.0;
+            }
+            var bufferGeometryPointsTriangleCenter = new THREE.BufferGeometry();
+            bufferGeometryPointsTriangleCenter.addAttribute('position', new THREE.BufferAttribute(positionArrayTriangleCenter, 3));
+
+            var pointsTriangleCenterMaterial = new THREE.PointsMaterial( {
+              color: 0x00ffff,
+              size: 0.005,
+              blending: THREE.AdditiveBlending,
+              transparent: true,
+              sizeAttenuation: true
+            } );
+
+            var pointsTriangleCenter = new THREE.Points(bufferGeometryPointsTriangleCenter, pointsTriangleCenterMaterial);
+            scene.add(pointsTriangleCenter);
           }
         });
 
