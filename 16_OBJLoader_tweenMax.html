@@ -93,6 +93,7 @@
         3.0,
         centerPositionArrayTarget
       );
+      centerPositionArrayTarget.ease = Expo.easeInOut;
 
       var objectCenterPoints = scene.getObjectByName("bunnyCenterPoints");
       centerPositionArrayTarget.onUpdate = function(){
