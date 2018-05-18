@@ -72,14 +72,46 @@
         objectPoints.geometry.attributes.position.needsUpdate = true;
       }
     }
+
+    this.tweenCenterPositionInitial = function(){
+      TweenMax.to(
+        positionArrayTriangleCenter,
+        3.0,
+        centerPositionArrayInitial
+      );
+
+      var objectCenterPoints = scene.getObjectByName("bunnyCenterPoints");
+      centerPositionArrayInitial.onUpdate = function(){
+        objectCenterPoints.geometry.attributes.position.needsUpdate = true;
+      }
+
+    }
+
+    this.tweenCenterPositionTarget = function(){
+      TweenMax.to(
+        positionArrayTriangleCenter,
+        3.0,
+        centerPositionArrayTarget
+      );
+
+      var objectCenterPoints = scene.getObjectByName("bunnyCenterPoints");
+      centerPositionArrayTarget.onUpdate = function(){
+        objectCenterPoints.geometry.attributes.position.needsUpdate = true;
+      }
+
+    }
+
   };
   var settings = new Settings();
-  var gui = new dat.GUI();
+  var gui = new dat.GUI({width: 400});
 
   var scene, camera, renderer;
 
   var positionArrayInitial = [];
   var positionArrayTarget = [];
+
+  var centerPositionArrayInitial = [];
+  var centerPositionArrayTarget = [];
 
   // debug
   var stats;
@@ -134,6 +166,8 @@
     guiFolderTween.add(settings, 'tweenOrigin');
     guiFolderTween.add(settings, 'tweenPositionInitial');
     guiFolderTween.add(settings, 'tweenPositionTarget');
+    guiFolderTween.add(settings, 'tweenCenterPositionInitial');
+    guiFolderTween.add(settings, 'tweenCenterPositionTarget');
     guiFolderTween.open();
 
     // scene
@@ -187,7 +221,7 @@
             // material for bunnyMesh
             child.material.wireframe = settings.enableWireframe;
 
-            // save initial point array
+            // for tween: save initial point array
             positionArrayInitial = child.geometry.attributes.position.array.slice();
             for (var i = 0; i < positionArrayInitial.length; i++){
               positionArrayTarget[i] = (Math.random() - 0.5) * 3.0;
@@ -208,12 +242,19 @@
             scene.add(points);
 
             // export json data
-            var positionArrayTriangleCenter = new Float32Array(Math.floor(positionArrayInitial.length / 3));
+            positionArrayTriangleCenter = new Float32Array(Math.floor(positionArrayInitial.length / 3));
             for (var i = 0; i < positionArrayInitial.length / 9; i++){
               positionArrayTriangleCenter[3 * i + 0] = ( positionArrayInitial[9 * i + 0] + positionArrayInitial[9 * i + 3] + positionArrayInitial[9 * i + 6] ) / 3.0;
               positionArrayTriangleCenter[3 * i + 1] = ( positionArrayInitial[9 * i + 1] + positionArrayInitial[9 * i + 4] + positionArrayInitial[9 * i + 7] ) / 3.0;
               positionArrayTriangleCenter[3 * i + 2] = ( positionArrayInitial[9 * i + 2] + positionArrayInitial[9 * i + 5] + positionArrayInitial[9 * i + 8] ) / 3.0;
             }
+
+            // for tween
+            centerPositionArrayInitial = positionArrayTriangleCenter.slice();
+            for (var i = 0; i < centerPositionArrayInitial.length; i++){
+              centerPositionArrayTarget[i] = (Math.random() - 0.5) * 3.0;
+            }
+
             var bufferGeometryPointsTriangleCenter = new THREE.BufferGeometry();
             bufferGeometryPointsTriangleCenter.addAttribute('position', new THREE.BufferAttribute(positionArrayTriangleCenter, 3));
 
@@ -226,6 +267,7 @@
             } );
 
             var pointsTriangleCenter = new THREE.Points(bufferGeometryPointsTriangleCenter, pointsTriangleCenterMaterial);
+            pointsTriangleCenter.name = "bunnyCenterPoints";
             scene.add(pointsTriangleCenter);
 
             // // save as JSON data (check Application > Storage > Local Storage on Google Chrome's Developer Tools.)
