@@ -123,6 +123,10 @@
             points.name = "bunnyPoints";
             points.visible = settings.isPointsVisible;
             scene.add(points);
+
+            var guiFolderPoints = gui.addFolder('Points');
+            guiFolderPoints.add(points, 'visible');
+            guiFolderPoints.open();
           }
         });
 
@@ -181,13 +185,7 @@
 
 
     // - points
-    var guiFolderPoints = gui.addFolder('Points');
-    guiFolderPoints.add(settings, 'isPointsVisible').onChange(guiIsPointsChanged);
-    function guiIsPointsChanged(){
-      var objectPoints = scene.getObjectByName("bunnyPoints");
-      objectPoints.visible = settings.isPointsVisible;
-    };
-    guiFolderPoints.open();
+
 
     // - gridHelper
     var guiFolderGridHelper = gui.addFolder('GridHelper');
