@@ -26,9 +26,10 @@
 
     // clipping
     this.clippingPlaneConstant = 0.8;
+    this.planeHelperVisible = true;
 
     // points
-    this.isPointsVisible = false;
+    this.isPointsVisible = true;
 
     // gridHelper
     this.isGridHelperVisible = true;
@@ -37,7 +38,7 @@
   var gui = new dat.GUI();
 
   var scene, camera, renderer;
-  var localPlane;
+  var localPlane, planeHelperVisible;
 
   // debug
   var stats;
@@ -73,6 +74,11 @@
     guiFolderClipping.add(settings, 'clippingPlaneConstant', 0, 2.0).onChange(clippingPlaneConstantChanged);
     function clippingPlaneConstantChanged(){
       localPlane.constant = settings.clippingPlaneConstant;
+    }
+
+    guiFolderClipping.add(settings, 'planeHelperVisible').onChange(planeHelperVisibleChanged);
+    function planeHelperVisibleChanged(){
+      planeHelper.visible = settings.planeHelperVisible;
     }
     guiFolderClipping.open();
 
@@ -129,6 +135,10 @@
 
     // clipping
     localPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), settings.clippingPlaneConstant);
+    // helper to visualize the clipping plane
+    planeHelper = new THREE.PlaneHelper(localPlane, 2, 0xffff00);
+    planeHelper.visible = settings.planeHelperVisible;
+    scene.add(planeHelper);
 
     // instantiate a loader
     var loaderOBJ = new THREE.OBJLoader();
