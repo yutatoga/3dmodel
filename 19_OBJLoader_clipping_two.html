@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>3dmodel</title>
+  <style>
+  body {
+    margin: 0;
+    overflow: hidden;
+  }
+
+  </style>
+</head>
+<body>
+  <script type="text/javascript" src="/js/three.js"></script>
+  <script type="text/javascript" src="/js/OBJLoader.js"></script>
+  <script type="text/javascript" src="js/OrbitControls.js"></script>
+  <script type="text/javascript" src="js/stats.min.js"></script>
+  <script type="text/javascript" src="js/dat.gui.min.js"></script>
+  <script>
+
+  var Settings = function(){
+    // mesh
+    this.isMeshVisible = true;
+    this.enableWireframe = false;
+
+    // clipping
+    this.clippingPlaneConstant1 = 0.8;
+    this.clippingPlaneConstant2 = -0.5;
+    this.clipIntersection = false;
+
+    // points
+    this.isPointsVisible = false;
+
+    // gridHelper
+    this.isGridHelperVisible = true;
+  };
+  var settings = new Settings();
+  var gui = new dat.GUI();
+
+  var scene, camera, renderer;
+  var localPlane1, localPlane2;
+  var materialBunny;
+
+  // debug
+  var stats;
+
+  init();
+  animate();
+
+  function init(){
+    // gui
+    // - mesh
+    var guiFolderMesh = gui.addFolder('Mesh');
+    guiFolderMesh.add(settings, 'isMeshVisible').onChange(guiIsMeshVisibleChanged);
+    function guiIsMeshVisibleChanged(){
+      var objectMesh = scene.getObjectByName("bunnyMesh");
+      objectMesh.visible = settings.isMeshVisible;
+    }
+
+    guiFolderMesh.add(settings, 'enableWireframe').onChange(guiEnableWireframeChanged);
+    function guiEnableWireframeChanged(){
+      var object = scene.getObjectByName("bunnyMesh");
+
+      object.traverse(function (child){
+        if (child instanceof THREE.Mesh){
+          child.material.wireframe = settings.enableWireframe;
+        }
+      });
+
+    };
+    guiFolderMesh.open();
+
+    // - clipping
+    var guiFolderClipping = gui.addFolder('Clipping');
+    guiFolderClipping.add(settings, 'clippingPlaneConstant1', 0, 2.0).onChange(clippingPlaneConstant1Changed);
+    function clippingPlaneConstant1Changed(){
+      localPlane1.constant = settings.clippingPlaneConstant1;
+    }
+
+    guiFolderClipping.add(settings, 'clippingPlaneConstant2', -2.0, 0.0).onChange(clippingPlaneConstant2Changed);
+    function clippingPlaneConstant2Changed(){
+      localPlane2.constant = settings.clippingPlaneConstant2;
+    }
+
+    guiFolderClipping.add(settings, 'clipIntersection').onChange(clipIntersectionChanged);
+    function clipIntersectionChanged(){
+      materialBunny.clipIntersection = settings.clipIntersection;
+    }
+
+    guiFolderClipping.open();
+
+    // - pints
+    var guiFolderPoints = gui.addFolder('Points');
+    guiFolderPoints.add(settings, 'isPointsVisible').onChange(guiIsPointsChanged);
+    function guiIsPointsChanged(){
+      var objectPoints = scene.getObjectByName("bunnyPoints");
+      objectPoints.visible = settings.isPointsVisible;
+    };
+    guiFolderPoints.open();
+
+    // - gridHelper
+    var guiFolderGridHelper = gui.addFolder('GridHelper');
+    guiFolderGridHelper.add(settings, 'isGridHelperVisible').onChange(guiIsGridHelperChanged);
+    function guiIsGridHelperChanged(){
+      var gridHelper = scene.getObjectByName("gridHelper");
+      gridHelper.visible = settings.isGridHelperVisible;
+    };
+    guiFolderGridHelper.open();
+
+
+    // scene
+    scene = new THREE.Scene();
+
+    // camera
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.01, 1000);
+    camera.position.set(0, 1.5, 2.5);
+
+    // renderer
+    renderer = new THREE.WebGLRenderer({
+      antialias: true
+    });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.localClippingEnabled = true;
+
+    document.body.appendChild(renderer.domElement);
+
+    // OrbitControls
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    // - damping
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.25; // default is 0.25
+    controls.zoomSpeed = 0.5; // default is 1
+    // - auto rotate
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 0.2; // default is 2.0
+
+    // light
+    var light = new THREE.DirectionalLight(0xffffff);
+    light.position.set(0, 1, 0);
+    scene.add(light);
+
+    // clipping
+    localPlane1 = new THREE.Plane(new THREE.Vector3(0, -1, 0), settings.clippingPlaneConstant1);
+    localPlane2 = new THREE.Plane(new THREE.Vector3(0, +1, 0), settings.clippingPlaneConstant2);
+
+    // instantiate a loader
+    var loaderOBJ = new THREE.OBJLoader();
+    console.log(loaderOBJ.isPoint);
+
+    // load a resource
+    loaderOBJ.load(
+      // resource URL
+      '/model/bunny.obj',
+      // called when resource is loaded
+      function (object) {
+        // mesh bunny
+        object.position.set(0, 0, 0);
+        object.name = "bunnyMesh"; // object is Group, not mesh.
+        object.visible = settings.isMeshVisible;
+        scene.add(object);
+
+        object.traverse(function (child){
+          if (child instanceof THREE.Mesh){ // child is mesh
+            // material(MeshPhongMaterial) for bunnyMesh
+            child.material.wireframe = settings.enableWireframe;
+            // clipping
+            child.material.clippingPlanes = [localPlane1, localPlane2];
+            child.material.clipShadows = true;
+            child.material.clipIntersection = settings.clipIntersection;
+            materialBunny = child.material;
+
+            // points bunny
+            var pointsMaterial = new THREE.PointsMaterial( {
+              color: 0xFF0000,
+              size: 0.005,
+              blending: THREE.AdditiveBlending,
+              transparent: true,
+              sizeAttenuation: true
+            } );
+            var points = new THREE.Points(child.geometry, pointsMaterial);
+            points.position.set(0, 0, 0);
+            points.name = "bunnyPoints";
+            points.visible = settings.isPointsVisible;
+            scene.add(points);
+          }
+        });
+
+      },
+      // called when loading is in progresses
+      function (xhr) {
+        console.log((xhr.loaded/xhr.total * 100) + '% loaded');
+      },
+      // called when loading has errors
+      function (error) {
+        console.log('An error happened');
+      }
+    );
+
+
+
+
+    // GridHelper
+    var size = 10;
+    var divisions = 10;
+    var gridHelper = new THREE.GridHelper(size, divisions);
+    gridHelper.name = "gridHelper";
+    gridHelper.visible = settings.isGridHelperVisible;
+    scene.add(gridHelper);
+
+
+    // debug
+    stats = new Stats();
+    stats.showPanel(0);
+    document.body.appendChild(stats.dom);
+
+  }
+
+  function animate() {
+    stats.begin();
+    controls.update();
+    renderer.render(scene, camera);
+    stats.end();
+  	requestAnimationFrame(animate);
+  }
+
+  </script>
+</body>
+</html>
