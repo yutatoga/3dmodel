@@ -35,10 +35,10 @@
     this.isGridHelperVisible = true;
   };
   var settings = new Settings();
-  var gui = new dat.GUI();
+  var gui = new dat.GUI({width: 350});
 
   var scene, camera, renderer;
-  var localPlane, planeHelperVisible;
+  var localPlane, planeHelper;
 
   // debug
   var stats;
@@ -47,60 +47,6 @@
   animate();
 
   function init(){
-    // gui
-    // - mesh
-    var guiFolderMesh = gui.addFolder('Mesh');
-    guiFolderMesh.add(settings, 'isMeshVisible').onChange(guiIsMeshVisibleChanged);
-    function guiIsMeshVisibleChanged(){
-      var objectMesh = scene.getObjectByName("bunnyMesh");
-      objectMesh.visible = settings.isMeshVisible;
-    }
-
-    guiFolderMesh.add(settings, 'enableWireframe').onChange(guiEnableWireframeChanged);
-    function guiEnableWireframeChanged(){
-      var object = scene.getObjectByName("bunnyMesh");
-
-      object.traverse(function (child){
-        if (child instanceof THREE.Mesh){
-          child.material.wireframe = settings.enableWireframe;
-        }
-      });
-
-    };
-    guiFolderMesh.open();
-
-    // - clipping
-    var guiFolderClipping = gui.addFolder('Clipping');
-    guiFolderClipping.add(settings, 'clippingPlaneConstant', 0, 2.0).onChange(clippingPlaneConstantChanged);
-    function clippingPlaneConstantChanged(){
-      localPlane.constant = settings.clippingPlaneConstant;
-    }
-
-    guiFolderClipping.add(settings, 'planeHelperVisible').onChange(planeHelperVisibleChanged);
-    function planeHelperVisibleChanged(){
-      planeHelper.visible = settings.planeHelperVisible;
-    }
-    guiFolderClipping.open();
-
-    // - pints
-    var guiFolderPoints = gui.addFolder('Points');
-    guiFolderPoints.add(settings, 'isPointsVisible').onChange(guiIsPointsChanged);
-    function guiIsPointsChanged(){
-      var objectPoints = scene.getObjectByName("bunnyPoints");
-      objectPoints.visible = settings.isPointsVisible;
-    };
-    guiFolderPoints.open();
-
-    // - gridHelper
-    var guiFolderGridHelper = gui.addFolder('GridHelper');
-    guiFolderGridHelper.add(settings, 'isGridHelperVisible').onChange(guiIsGridHelperChanged);
-    function guiIsGridHelperChanged(){
-      var gridHelper = scene.getObjectByName("gridHelper");
-      gridHelper.visible = settings.isGridHelperVisible;
-    };
-    guiFolderGridHelper.open();
-
-
     // scene
     scene = new THREE.Scene();
 
@@ -191,9 +137,6 @@
       }
     );
 
-
-
-
     // GridHelper
     var size = 10;
     var divisions = 10;
@@ -202,6 +145,58 @@
     gridHelper.visible = settings.isGridHelperVisible;
     scene.add(gridHelper);
 
+    // gui
+    // - mesh
+    var guiFolderMesh = gui.addFolder('Mesh');
+    guiFolderMesh.add(settings, 'isMeshVisible').onChange(guiIsMeshVisibleChanged);
+    function guiIsMeshVisibleChanged(){
+      var objectMesh = scene.getObjectByName("bunnyMesh");
+      objectMesh.visible = settings.isMeshVisible;
+    }
+
+    guiFolderMesh.add(settings, 'enableWireframe').onChange(guiEnableWireframeChanged);
+    function guiEnableWireframeChanged(){
+      var object = scene.getObjectByName("bunnyMesh");
+
+      object.traverse(function (child){
+        if (child instanceof THREE.Mesh){
+          child.material.wireframe = settings.enableWireframe;
+        }
+      });
+
+    };
+    guiFolderMesh.open();
+
+    // - clipping
+    var guiFolderClipping = gui.addFolder('Clipping');
+    guiFolderClipping.add(settings, 'clippingPlaneConstant', 0, 2.0).onChange(clippingPlaneConstantChanged);
+    function clippingPlaneConstantChanged(){
+      localPlane.constant = settings.clippingPlaneConstant;
+    }
+    guiFolderClipping.open();
+
+    var guiFolderPlaneHelper = gui.addFolder('planeHelper');
+    guiFolderPlaneHelper.add(planeHelper, 'visible');
+    guiFolderPlaneHelper.open();
+
+
+    // - points
+    var guiFolderPoints = gui.addFolder('Points');
+    guiFolderPoints.add(settings, 'isPointsVisible').onChange(guiIsPointsChanged);
+    function guiIsPointsChanged(){
+      var objectPoints = scene.getObjectByName("bunnyPoints");
+      objectPoints.visible = settings.isPointsVisible;
+    };
+    guiFolderPoints.open();
+
+    // - gridHelper
+    var guiFolderGridHelper = gui.addFolder('GridHelper');
+    guiFolderGridHelper.add(settings, 'isGridHelperVisible').onChange(guiIsGridHelperChanged);
+    function guiIsGridHelperChanged(){
+      var gridHelper = scene.getObjectByName("gridHelper");
+      gridHelper.visible = settings.isGridHelperVisible;
+    };
+    guiFolderGridHelper.open();
 
     // debug
     stats = new Stats();
