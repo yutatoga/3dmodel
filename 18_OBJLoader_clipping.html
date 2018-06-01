@@ -185,11 +185,7 @@
 
     // - gridHelper
     var guiFolderGridHelper = gui.addFolder('GridHelper');
-    guiFolderGridHelper.add(settings, 'isGridHelperVisible').onChange(guiIsGridHelperChanged);
-    function guiIsGridHelperChanged(){
-      var gridHelper = scene.getObjectByName("gridHelper");
-      gridHelper.visible = settings.isGridHelperVisible;
-    };
+    guiFolderGridHelper.add(gridHelper, 'visible');
     guiFolderGridHelper.open();
 
     // debug
