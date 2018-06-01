@@ -28,9 +28,10 @@
     this.clippingPlaneConstant1 = 0.8;
     this.clippingPlaneConstant2 = -0.5;
     this.clipIntersection = false;
+    this.planeHelperGroupVisible = true;
 
     // points
-    this.isPointsVisible = false;
+    this.isPointsVisible = true;
 
     // gridHelper
     this.isGridHelperVisible = true;
@@ -39,7 +40,7 @@
   var gui = new dat.GUI();
 
   var scene, camera, renderer;
-  var localPlane1, localPlane2;
+  var localPlane1, localPlane2, planeHelperGroup;
   var materialBunny;
 
   // debug
@@ -86,6 +87,11 @@
     guiFolderClipping.add(settings, 'clipIntersection').onChange(clipIntersectionChanged);
     function clipIntersectionChanged(){
       materialBunny.clipIntersection = settings.clipIntersection;
+    }
+
+    guiFolderClipping.add(settings, 'planeHelperGroupVisible').onChange(planeHelperGroupVisibleChanged);
+    function planeHelperGroupVisibleChanged(){
+      planeHelperGroup.visible = settings.planeHelperGroupVisible;
     }
 
     guiFolderClipping.open();
@@ -144,6 +150,13 @@
     // clipping
     localPlane1 = new THREE.Plane(new THREE.Vector3(0, -1, 0), settings.clippingPlaneConstant1);
     localPlane2 = new THREE.Plane(new THREE.Vector3(0, +1, 0), settings.clippingPlaneConstant2);
+
+    // helper objects to visualize the clipping planes
+    planeHelperGroup = new THREE.Group();
+    planeHelperGroup.add(new THREE.PlaneHelper(localPlane1, 2, 0xffff00));
+    planeHelperGroup.add(new THREE.PlaneHelper(localPlane2, 2, 0xff00ff));
+    planeHelperGroup.visible = settings.planeHelperGroupVisible;
+    scene.add(planeHelperGroup);
 
     // instantiate a loader
     var loaderOBJ = new THREE.OBJLoader();
