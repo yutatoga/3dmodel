@@ -42,47 +42,6 @@
   animate();
 
   function init(){
-    // gui
-    // - mesh
-    var guiFolderMesh = gui.addFolder('Mesh');
-    guiFolderMesh.add(settings, 'isMeshVisible').onChange(guiIsMeshVisibleChanged);
-    function guiIsMeshVisibleChanged(){
-      var objectMesh = scene.getObjectByName("bunnyMesh");
-      objectMesh.visible = settings.isMeshVisible;
-    }
-
-    guiFolderMesh.add(settings, 'enableWireframe').onChange(guiEnableWireframeChanged);
-    function guiEnableWireframeChanged(){
-      var object = scene.getObjectByName("bunnyMesh");
-
-      object.traverse(function (child){
-        if (child instanceof THREE.Mesh){
-          child.material.wireframe = settings.enableWireframe;
-        }
-      });
-
-    };
-    guiFolderMesh.open();
-
-    // - pints
-    var guiFolderPoints = gui.addFolder('Points');
-    guiFolderPoints.add(settings, 'isPointsVisible').onChange(guiIsPointsChanged);
-    function guiIsPointsChanged(){
-      var objectPoints = scene.getObjectByName("bunnyPoints");
-      objectPoints.visible = settings.isPointsVisible;
-    };
-    guiFolderPoints.open();
-
-    // - gridHelper
-    var guiFolderGridHelper = gui.addFolder('GridHelper');
-    guiFolderGridHelper.add(settings, 'isGridHelperVisible').onChange(guiIsGridHelperChanged);
-    function guiIsGridHelperChanged(){
-      var gridHelper = scene.getObjectByName("gridHelper");
-      gridHelper.visible = settings.isGridHelperVisible;
-    };
-    guiFolderGridHelper.open();
-
-
     // scene
     scene = new THREE.Scene();
 
@@ -129,10 +88,16 @@
         object.visible = settings.isMeshVisible;
         scene.add(object);
 
+        var guiFolderMesh = gui.addFolder('Mesh');
+        guiFolderMesh.add(object, 'visible');
+        guiFolderMesh.open();
+
         object.traverse(function (child){
           if (child instanceof THREE.Mesh){
             // material for bunnyMesh
             child.material.wireframe = settings.enableWireframe;
+
+            guiFolderMesh.add(child.material, 'wireframe');
 
             // points bunny
             var pointsMaterial = new THREE.PointsMaterial( {
@@ -147,6 +112,11 @@
             points.name = "bunnyPoints";
             points.visible = settings.isPointsVisible;
             scene.add(points);
+
+            // gui for points
+            var guiFolderPoints = gui.addFolder('Points');
+            guiFolderPoints.add(points, 'visible');
+            guiFolderPoints.open();
           }
         });
 
@@ -169,6 +139,10 @@
     gridHelper.visible = settings.isGridHelperVisible;
     scene.add(gridHelper);
 
+    // - gridHelper
+    var guiFolderGridHelper = gui.addFolder('GridHelper');
+    guiFolderGridHelper.add(gridHelper, 'visible');
+    guiFolderGridHelper.open();
 
     // debug
     stats = new Stats();
