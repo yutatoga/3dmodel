@@ -78,6 +78,9 @@
     var light = new THREE.DirectionalLight(0xffffff);
     light.position.set(0, 1, 0);
     scene.add(light);
+    var guiFolderLight = gui.addFolder('Light');
+    guiFolderLight.add(light, 'intensity', 0, 10);
+    guiFolderLight.open();
 
     // clipping
     var localPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), settings.clippingPlaneConstant);
