@@ -85,7 +85,6 @@
     // clipping
     var localPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), settings.clippingPlaneConstant);
     var guiFolderPlane = gui.addFolder('Plane');
-    console.log('foo', localPlane);
     guiFolderPlane.add(localPlane.normal, 'x').name("normal.x").step(0.01);
     guiFolderPlane.add(localPlane.normal, 'y').name("normal.y").step(0.01);
     guiFolderPlane.add(localPlane.normal, 'z').name("normal.z").step(0.01);
@@ -130,7 +129,6 @@
             // clipping
             child.material.clippingPlanes = [localPlane];
             child.material.clipShadows = true;
-            console.log()
 
             sectionHelper.material.clippingPlanes = [localPlane];
             sectionHelper.material.clipShadows = true;
