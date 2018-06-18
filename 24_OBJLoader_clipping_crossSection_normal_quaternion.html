@@ -34,11 +34,20 @@
 
     // gridHelper
     this.isGridHelperVisible = true;
+
+    this.applyQuaternion = function (){
+      var objectMesh = scene.getObjectByName("bunnyMesh");
+      var normal = new THREE.Vector3();
+      normal.set(0, -1, 0).applyQuaternion(objectMesh.quaternion);
+
+      localPlane.normal = normal;
+    }
   };
   var settings = new Settings();
-  var gui = new dat.GUI({width: 350});
+  var gui = new dat.GUI({width: 300});
 
   var scene, camera, renderer;
+  var localPlane;
 
   // debug
   var stats;
@@ -83,7 +92,7 @@
     guiFolderLight.open();
 
     // clipping
-    var localPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), settings.clippingPlaneConstant);
+    localPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), settings.clippingPlaneConstant);
     var guiFolderPlane = gui.addFolder('Plane');
     guiFolderPlane.add(localPlane.normal, 'x').name("normal.x").step(0.01);
     guiFolderPlane.add(localPlane.normal, 'y').name("normal.y").step(0.01);
@@ -118,6 +127,8 @@
             guiFolderMesh.add(child.quaternion, 'y').name('quaternion.y').step(0.01);
             guiFolderMesh.add(child.quaternion, 'z').name('quaternion.z').step(0.01);
             guiFolderMesh.add(child.quaternion, 'w').name('quaternion.w').step(0.01);
+
+            guiFolderMesh.add(settings, 'applyQuaternion');
 
             // buddy for cross section
             var sectionHelper = new THREE.SectionHelper(child, 0xffffff);
