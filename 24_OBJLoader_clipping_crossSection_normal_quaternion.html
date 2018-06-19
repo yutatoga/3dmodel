@@ -35,7 +35,7 @@
     // gridHelper
     this.isGridHelperVisible = true;
 
-    this.applyQuaternion = function (){
+    this.applyQuaternionOfBunny = function (){
       var objectMesh = scene.getObjectByName("bunnyMesh");
       var normal = new THREE.Vector3();
       normal.set(0, -1, 0).applyQuaternion(objectMesh.quaternion).normalize();
@@ -172,7 +172,7 @@
             guiFolderMesh.add(child.quaternion, 'z').name('quaternion.z').step(0.01);
             guiFolderMesh.add(child.quaternion, 'w').name('quaternion.w').step(0.01);
 
-            guiFolderMesh.add(settings, 'applyQuaternion');
+            guiFolderMesh.add(settings, 'applyQuaternionOfBunny');
 
             // buddy for cross section
             var sectionHelper = new THREE.SectionHelper(child, 0xffffff);
