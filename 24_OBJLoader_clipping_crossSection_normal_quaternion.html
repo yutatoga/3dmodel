@@ -142,6 +142,7 @@
       vertexColors: THREE.VertexColors,
     });
     meshBox = new THREE.Mesh(geometryBox, materialBox);
+    meshBox.material.clippingPlanes = [localPlane];
     scene.add(meshBox);
     meshBox.visible = settings.isBoxInitiallyVisible;
     // - helper
