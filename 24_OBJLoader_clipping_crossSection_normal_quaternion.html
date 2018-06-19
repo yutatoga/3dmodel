@@ -40,12 +40,15 @@
       var objectMesh = scene.getObjectByName("bunnyMesh");
       var normal = new THREE.Vector3();
       normal.set(0, -1, 0).applyQuaternion(objectMesh.quaternion).normalize();
-      normal.applyAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI/2.0);
       localPlane.normal.copy(normal);
 
       // to box
       meshBox.applyQuaternion(objectMesh.quaternion);
     }
+
+    this.applyAxisAnglePositiveX = 0;
+    this.applyAxisAnglePositiveY = 0;
+    this.applyAxisAnglePositiveZ = 0;
 
     // box
     this.BOX_SIZE = 2.0;
@@ -171,13 +174,26 @@
             child.name = "bunnyMesh"; // object is Group, not mesh.
             child.visible = settings.isMeshVisible;
             scene.add(child);
-
+            // - gui
             guiFolderMesh.add(child.quaternion, 'x').name('quaternion.x').step(0.01);
             guiFolderMesh.add(child.quaternion, 'y').name('quaternion.y').step(0.01);
             guiFolderMesh.add(child.quaternion, 'z').name('quaternion.z').step(0.01);
             guiFolderMesh.add(child.quaternion, 'w').name('quaternion.w').step(0.01);
-
             guiFolderMesh.add(settings, 'applyQuaternionOfBunnyToClippingPlaneAndBox');
+
+            var guiFolderApplyAxis = gui.addFolder('applyAxisAngle');
+            guiFolderApplyAxis.add(settings, 'applyAxisAnglePositiveX', 0, Math.PI * 2).step(0.01).onChange(applyAxisAnglePositiveXYZ);
+            guiFolderApplyAxis.add(settings, 'applyAxisAnglePositiveY', 0, Math.PI * 2).step(0.01).onChange(applyAxisAnglePositiveXYZ);
+            guiFolderApplyAxis.add(settings, 'applyAxisAnglePositiveZ', 0, Math.PI * 2).step(0.01).onChange(applyAxisAnglePositiveXYZ);
+            guiFolderApplyAxis.open();
+
+            function applyAxisAnglePositiveXYZ(){
+              var normal = new THREE.Vector3(0, -1, 0);
+              normal.applyAxisAngle(new THREE.Vector3(1, 0, 0), settings.applyAxisAnglePositiveX);
+              normal.applyAxisAngle(new THREE.Vector3(0, 1, 0), settings.applyAxisAnglePositiveY);
+              normal.applyAxisAngle(new THREE.Vector3(0, 0, 1), settings.applyAxisAnglePositiveZ);
+              localPlane.normal.copy(normal);
+            }
 
             // buddy for cross section
             var sectionHelper = new THREE.SectionHelper(child, 0xffffff);
@@ -192,7 +208,7 @@
 
             sectionHelper.material.clippingPlanes = [localPlane];
             sectionHelper.material.clipShadows = true;
-            console.log(sectionHelper);
+
 
             // points bunny
             var pointsMaterial = new THREE.PointsMaterial( {
