@@ -172,7 +172,7 @@
             guiFolderMesh.add(child.quaternion, 'z').name('quaternion.z').step(0.01);
             guiFolderMesh.add(child.quaternion, 'w').name('quaternion.w').step(0.01);
 
-            guiFolderMesh.add(settings, 'applyQuaternionOfBunny');
+            guiFolderMesh.add(settings, 'applyQuaternionOfBunnyToClippingPlane');
 
             // buddy for cross section
             var sectionHelper = new THREE.SectionHelper(child, 0xffffff);
