@@ -39,7 +39,7 @@
       var objectMesh = scene.getObjectByName("bunnyMesh");
       var normal = new THREE.Vector3();
       normal.set(0, -1, 0).applyQuaternion(objectMesh.quaternion).normalize();
-      localPlane.normal = normal;
+      localPlane.normal.copy(normal);
     }
   };
   var settings = new Settings();
@@ -93,10 +93,10 @@
     // clipping
     localPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), settings.clippingPlaneConstant);
     var guiFolderPlane = gui.addFolder('Plane');
-    guiFolderPlane.add(localPlane.normal, 'x').name("normal.x").step(0.01);
-    guiFolderPlane.add(localPlane.normal, 'y').name("normal.y").step(0.01);
-    guiFolderPlane.add(localPlane.normal, 'z').name("normal.z").step(0.01);
-    guiFolderPlane.add(localPlane, 'constant');
+    guiFolderPlane.add(localPlane.normal, 'x').name("normal.x").step(0.01).listen();
+    guiFolderPlane.add(localPlane.normal, 'y').name("normal.y").step(0.01).listen();
+    guiFolderPlane.add(localPlane.normal, 'z').name("normal.z").step(0.01).listen();
+    guiFolderPlane.add(localPlane, 'constant').listen();
     guiFolderPlane.open();
 
     // helper to visualize the clipping plane
