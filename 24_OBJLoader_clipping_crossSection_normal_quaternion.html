@@ -182,12 +182,12 @@
             guiFolderMesh.add(settings, 'applyQuaternionOfBunnyToClippingPlaneAndBox');
 
             var guiFolderApplyAxis = gui.addFolder('applyAxisAngle');
-            guiFolderApplyAxis.add(settings, 'applyAxisAnglePositiveX', 0, Math.PI * 2).step(0.01).onChange(applyAxisAnglePositiveXYZ);
-            guiFolderApplyAxis.add(settings, 'applyAxisAnglePositiveY', 0, Math.PI * 2).step(0.01).onChange(applyAxisAnglePositiveXYZ);
-            guiFolderApplyAxis.add(settings, 'applyAxisAnglePositiveZ', 0, Math.PI * 2).step(0.01).onChange(applyAxisAnglePositiveXYZ);
+            guiFolderApplyAxis.add(settings, 'applyAxisAnglePositiveX', 0, Math.PI * 2).step(0.01).onChange(applyAxisAngleToClippingPlane);
+            guiFolderApplyAxis.add(settings, 'applyAxisAnglePositiveY', 0, Math.PI * 2).step(0.01).onChange(applyAxisAngleToClippingPlane);
+            guiFolderApplyAxis.add(settings, 'applyAxisAnglePositiveZ', 0, Math.PI * 2).step(0.01).onChange(applyAxisAngleToClippingPlane);
             guiFolderApplyAxis.open();
 
-            function applyAxisAnglePositiveXYZ(){
+            function applyAxisAngleToClippingPlane(){
               var normal = new THREE.Vector3(0, -1, 0);
               normal.applyAxisAngle(new THREE.Vector3(1, 0, 0), settings.applyAxisAnglePositiveX);
               normal.applyAxisAngle(new THREE.Vector3(0, 1, 0), settings.applyAxisAnglePositiveY);
