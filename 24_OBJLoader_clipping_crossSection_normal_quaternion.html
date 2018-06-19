@@ -35,7 +35,7 @@
     // gridHelper
     this.isGridHelperVisible = true;
 
-    this.applyQuaternionOfBunny = function (){
+    this.applyQuaternionOfBunnyToClippingPlane = function (){
       var objectMesh = scene.getObjectByName("bunnyMesh");
       var normal = new THREE.Vector3();
       normal.set(0, -1, 0).applyQuaternion(objectMesh.quaternion).normalize();
