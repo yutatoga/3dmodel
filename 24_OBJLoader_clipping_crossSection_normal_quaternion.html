@@ -35,13 +35,16 @@
     // gridHelper
     this.isGridHelperVisible = true;
 
-    this.applyQuaternionOfBunnyToClippingPlane = function (){
+    this.applyQuaternionOfBunnyToClippingPlaneAndBox = function (){
+      // to clipping plane
       var objectMesh = scene.getObjectByName("bunnyMesh");
       var normal = new THREE.Vector3();
       normal.set(0, -1, 0).applyQuaternion(objectMesh.quaternion).normalize();
       normal.applyAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI/2.0);
-
       localPlane.normal.copy(normal);
+
+      // to box
+      meshBox.applyQuaternion(objectMesh.quaternion);
     }
 
     // box
@@ -59,11 +62,13 @@
       new THREE.Color(0x000000)
     ];
   };
+
   var settings = new Settings();
   var gui = new dat.GUI({width: 300});
 
   var scene, camera, renderer;
   var localPlane;
+  var meshBox;
 
   // debug
   var stats;
@@ -136,13 +141,12 @@
       opacity: settings.initialBoxOpacity,
       vertexColors: THREE.VertexColors,
     });
-    var meshBox = new THREE.Mesh(geometryBox, materialBox);
+    meshBox = new THREE.Mesh(geometryBox, materialBox);
     scene.add(meshBox);
     meshBox.visible = settings.isBoxInitiallyVisible;
     // - helper
     var helperBox = new THREE.BoxHelper(meshBox, 0xffff00);
     scene.add(helperBox);
-
     // - gui
     var guiFolderBox = gui.addFolder('Box');
     guiFolderBox.add(meshBox, 'visible');
@@ -172,7 +176,7 @@
             guiFolderMesh.add(child.quaternion, 'z').name('quaternion.z').step(0.01);
             guiFolderMesh.add(child.quaternion, 'w').name('quaternion.w').step(0.01);
 
-            guiFolderMesh.add(settings, 'applyQuaternionOfBunnyToClippingPlane');
+            guiFolderMesh.add(settings, 'applyQuaternionOfBunnyToClippingPlaneAndBox');
 
             // buddy for cross section
             var sectionHelper = new THREE.SectionHelper(child, 0xffffff);
