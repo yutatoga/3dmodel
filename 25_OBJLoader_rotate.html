@@ -125,7 +125,11 @@
         object.position.set(0, 1, 0);
         object.name = "bunnyMesh";
         object.visible = settings.isMeshVisible;
+        var axesHelperForObject = new THREE.AxesHelper(1);
+        object.add(axesHelperForObject);
         scene.add(object);
+
+
 
         var guiFolderMesh = gui.addFolder('Mesh');
         guiFolderMesh.add(object.position, 'x').step(0.01);
@@ -155,9 +159,6 @@
         guiFolderRotateOnWorldAxis.add(settings.axisForRotateOnWorldAxis, 'y').step(0.1);
         guiFolderRotateOnWorldAxis.add(settings.axisForRotateOnWorldAxis, 'z').step(0.1);
         guiFolderRotateOnWorldAxis.open();
-
-        console.log(object.parent);
-        console.log(object.parent.position);
 
         object.traverse(function (child){
           if (child instanceof THREE.Mesh){
