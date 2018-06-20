@@ -64,6 +64,18 @@
       new THREE.Color(0x0000ff),
       new THREE.Color(0x000000)
     ];
+    this.boxOnRandomStatePositionRange = 3.0;
+    this.setBoxOnRandomState = function(){
+      meshBox.position.set(
+        (Math.random() * 2 - 1) * this.boxOnRandomStatePositionRange,
+        (Math.random() * 2 - 1) * this.boxOnRandomStatePositionRange,
+        (Math.random() * 2 - 1) * this.boxOnRandomStatePositionRange
+      );
+
+      meshBox.rotateX(Math.random() * Math.PI * 2);
+      meshBox.rotateY(Math.random() * Math.PI * 2);
+      meshBox.rotateZ(Math.random() * Math.PI * 2);
+    }
   };
 
   var settings = new Settings();
@@ -155,6 +167,7 @@
     var guiFolderBox = gui.addFolder('Box');
     guiFolderBox.add(meshBox, 'visible');
     guiFolderBox.add(materialBox, 'opacity');
+    guiFolderBox.add(settings, 'setBoxOnRandomState');
     guiFolderBox.open();
 
     // instantiate a loader
