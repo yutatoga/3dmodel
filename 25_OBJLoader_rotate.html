@@ -129,8 +129,6 @@
         object.add(axesHelperForObject);
         scene.add(object);
 
-
-
         var guiFolderMesh = gui.addFolder('Mesh');
         guiFolderMesh.add(object.position, 'x').step(0.01);
         guiFolderMesh.add(object.position, 'y').step(0.01);
@@ -143,6 +141,11 @@
         guiFolderMesh.add(settings, 'enableAutoRotateZ');
         guiFolderMesh.add(settings, 'rotateZ');
         guiFolderMesh.open();
+
+        var guiFolderEuler = gui.addFolder('Euler');
+        guiFolderEuler.add(object.rotation, 'x', 0, Math.PI * 2).step(0.01);
+        guiFolderEuler.add(object.rotation, 'y', 0, Math.PI * 2).step(0.01);;
+        guiFolderEuler.add(object.rotation, 'z', 0, Math.PI * 2).step(0.01);;
 
         // rotate locally
         var guiFolderRotateOnAxis = gui.addFolder('RotateOnAxis');
