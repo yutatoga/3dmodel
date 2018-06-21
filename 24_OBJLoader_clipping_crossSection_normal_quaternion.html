@@ -135,11 +135,13 @@
     guiFolderPlane.add(localPlane.normal, 'z').name("normal.z").step(0.01).listen();
     guiFolderPlane.add(localPlane, 'constant').listen();
     guiFolderPlane.open();
-
     // helper to visualize the clipping plane
-    var planeHelper = new THREE.PlaneHelper(localPlane, 100, 0xffff00);
+    var planeHelper = new THREE.PlaneHelper(localPlane, 10, 0xffff00);
     planeHelper.visible = settings.planeHelperVisible;
     scene.add(planeHelper);
+    // axes
+    var axesHelperPlaneHelper = new THREE.AxesHelper(1);
+    planeHelper.add(axesHelperPlaneHelper);
 
     // box
     var geometryBox = new THREE.BoxGeometry(settings.BOX_SIZE, settings.BOX_SIZE, settings.BOX_SIZE);
@@ -163,6 +165,9 @@
     // - edges
     var helperBox = new THREE.BoxHelper(meshBox, 0xffff00);
     meshBox.add(helperBox);
+    // - axes
+    var axesHelperBox = new THREE.AxesHelper(2);
+    meshBox.add(axesHelperBox);
 
     // - gui
     var guiFolderBox = gui.addFolder('Box');
