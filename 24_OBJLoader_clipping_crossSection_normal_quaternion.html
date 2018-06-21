@@ -160,9 +160,10 @@
     meshBox.material.clippingPlanes = [localPlane];
     scene.add(meshBox);
     meshBox.visible = settings.isBoxInitiallyVisible;
-    // - helper
-    var helperBox = new THREE.BoxHelper(meshBox, 0xffff00);
-    scene.add(helperBox);
+    // - edges
+    var edgesBox = new THREE.EdgesGeometry(meshBox.geometry);
+    var lineSegmentsEdgesBox = new THREE.LineSegments(edgesBox, new THREE.LineBasicMaterial({ color: 0xffff00 }));
+    meshBox.add(lineSegmentsEdgesBox);
     // - gui
     var guiFolderBox = gui.addFolder('Box');
     guiFolderBox.add(meshBox, 'visible');
