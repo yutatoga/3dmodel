@@ -125,7 +125,6 @@
     scene.add(light);
     var guiFolderLight = gui.addFolder('Light');
     guiFolderLight.add(light, 'intensity', 0, 10);
-    guiFolderLight.open();
 
     // clipping
     localPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), settings.clippingPlaneConstant);
@@ -134,7 +133,6 @@
     guiFolderPlane.add(localPlane.normal, 'y').name("normal.y").step(0.01).listen();
     guiFolderPlane.add(localPlane.normal, 'z').name("normal.z").step(0.01).listen();
     guiFolderPlane.add(localPlane, 'constant').listen();
-    guiFolderPlane.open();
 
     // helper to visualize the clipping plane
     var planeHelper = new THREE.PlaneHelper(localPlane, 100, 0xffff00);
@@ -198,7 +196,6 @@
             guiFolderApplyAxis.add(settings, 'applyAxisAnglePositiveX', 0, Math.PI * 2).step(0.01).onChange(applyAxisAngleToClippingPlane);
             guiFolderApplyAxis.add(settings, 'applyAxisAnglePositiveY', 0, Math.PI * 2).step(0.01).onChange(applyAxisAngleToClippingPlane);
             guiFolderApplyAxis.add(settings, 'applyAxisAnglePositiveZ', 0, Math.PI * 2).step(0.01).onChange(applyAxisAngleToClippingPlane);
-            guiFolderApplyAxis.open();
 
             function applyAxisAngleToClippingPlane(){
               var normal = new THREE.Vector3(0, -1, 0);
@@ -239,7 +236,6 @@
 
             var guiFolderPoints = gui.addFolder('Points');
             guiFolderPoints.add(points, 'visible');
-            guiFolderPoints.open();
           }
         });
 
@@ -282,21 +278,14 @@
       });
 
     };
-    guiFolderMesh.open();
 
-    // - clipping
-    var guiFolderClipping = gui.addFolder('Clipping');
-    guiFolderClipping.add(localPlane, 'constant');
-    guiFolderClipping.open();
-
+    // - planeHelper
     var guiFolderPlaneHelper = gui.addFolder('planeHelper');
     guiFolderPlaneHelper.add(planeHelper, 'visible');
-    guiFolderPlaneHelper.open();
 
     // - gridHelper
     var guiFolderGridHelper = gui.addFolder('GridHelper');
     guiFolderGridHelper.add(gridHelper, 'visible');
-    guiFolderGridHelper.open();
 
     // debug
     stats = new Stats();
