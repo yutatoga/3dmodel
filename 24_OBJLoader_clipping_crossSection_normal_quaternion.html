@@ -128,11 +128,13 @@
 
     // clipping
     localPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), settings.clippingPlaneConstant);
-    var guiFolderPlane = gui.addFolder('Plane');
+    var guiFolderPlane = gui.addFolder('Clipping Plane');
+    guiFolderPlane.add(renderer, 'localClippingEnabled');
     guiFolderPlane.add(localPlane.normal, 'x').name("normal.x").step(0.01).listen();
     guiFolderPlane.add(localPlane.normal, 'y').name("normal.y").step(0.01).listen();
     guiFolderPlane.add(localPlane.normal, 'z').name("normal.z").step(0.01).listen();
     guiFolderPlane.add(localPlane, 'constant').listen();
+    guiFolderPlane.open();
 
     // helper to visualize the clipping plane
     var planeHelper = new THREE.PlaneHelper(localPlane, 100, 0xffff00);
