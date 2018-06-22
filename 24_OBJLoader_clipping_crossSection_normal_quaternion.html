@@ -171,6 +171,9 @@
 
     // - gui
     var guiFolderBox = gui.addFolder('Box');
+    guiFolderBox.add(meshBox.rotation, 'x').step(0.01).name('rotation.x');
+    guiFolderBox.add(meshBox.rotation, 'y').step(0.01).name('rotation.y');
+    guiFolderBox.add(meshBox.rotation, 'z').step(0.01).name('rotation.z');
     guiFolderBox.add(meshBox, 'visible');
     guiFolderBox.add(materialBox, 'opacity');
     guiFolderBox.add(settings, 'setBoxOnRandomState');
