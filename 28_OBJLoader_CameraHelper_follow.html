@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>3dmodel</title>
+  <style>
+  body {
+    margin: 0;
+    overflow: hidden;
+  }
+
+  </style>
+</head>
+<body>
+  <script type="text/javascript" src="/js/three.js"></script>
+  <script type="text/javascript" src="/js/OBJLoader.js"></script>
+  <script type="text/javascript" src="js/OrbitControls.js"></script>
+  <script type="text/javascript" src="js/stats.min.js"></script>
+  <script type="text/javascript" src="js/dat.gui.min.js"></script>
+  <script>
+
+  var Settings = function(){
+    // mesh
+    this.isMeshVisible = true;
+    this.enableWireframe = false;
+
+    // points
+    this.isPointsVisible = false;
+
+    // gridHelper
+    this.isGridHelperVisible = true;
+  };
+  var settings = new Settings();
+  var gui = new dat.GUI();
+
+  var scene, camera, renderer;
+
+  // debug
+  var stats;
+
+  init();
+  animate();
+
+  function init(){
+    // scene
+    scene = new THREE.Scene();
+
+    // renderer
+    renderer = new THREE.WebGLRenderer({
+      antialias: true
+    });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.autoClear = false;
+    document.body.appendChild(renderer.domElement);
+
+    // camera
+    mainCamera = new THREE.PerspectiveCamera(50, (window.innerWidth / 2.0) / window.innerHeight, 1, 100000);
+    mainCamera.position.set(0, 5, 4);
+
+    // OrbitControls
+    controls = new THREE.OrbitControls(mainCamera, renderer.domElement);
+    // - damping
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.25; // default is 0.25
+    controls.zoomSpeed = 0.5; // default is 1
+    // - auto rotate
+    controls.autoRotate = false;
+    controls.autoRotateSpeed = 0.2; // default is 2.0
+
+    cameraHelper = new THREE.CameraHelper(mainCamera);
+    scene.add(cameraHelper);
+    cameraHelper.visible = true;
+
+    // monitor
+    monitorCamera = new THREE.PerspectiveCamera(75, (window.innerWidth / 2.0) / window.innerHeight, 1, 10000 );
+    monitorCamera.position.set(2, 2, 10);
+
+    // light
+    var light = new THREE.DirectionalLight(0xffffff);
+    light.position.set(0, 1, 0);
+    scene.add(light);
+
+    // instantiate a loader
+    var loaderOBJ = new THREE.OBJLoader();
+    console.log(loaderOBJ.isPoint);
+
+    // load a resource
+    loaderOBJ.load(
+      // resource URL
+      '/model/bunny.obj',
+      // called when resource is loaded
+      function (object) {
+        // mesh bunny
+        object.position.set(0, 0, 0);
+        object.name = "bunnyMesh";
+        object.visible = settings.isMeshVisible;
+        scene.add(object);
+
+        var guiFolderMesh = gui.addFolder('Mesh');
+        guiFolderMesh.add(object, 'visible');
+        guiFolderMesh.open();
+
+        object.traverse(function (child){
+          if (child instanceof THREE.Mesh){
+            // material for bunnyMesh
+            child.material.wireframe = settings.enableWireframe;
+
+            guiFolderMesh.add(child.material, 'wireframe');
+
+            // points bunny
+            var pointsMaterial = new THREE.PointsMaterial( {
+              color: 0xFF0000,
+              size: 0.005,
+              blending: THREE.AdditiveBlending,
+              transparent: true,
+              sizeAttenuation: true
+            } );
+            var points = new THREE.Points(child.geometry, pointsMaterial);
+            points.position.set(0, 0, 0);
+            points.name = "bunnyPoints";
+            points.visible = settings.isPointsVisible;
+            scene.add(points);
+
+            // gui for points
+            var guiFolderPoints = gui.addFolder('Points');
+            guiFolderPoints.add(points, 'visible');
+            guiFolderPoints.open();
+          }
+        });
+
+      },
+      // called when loading is in progresses
+      function (xhr) {
+        console.log((xhr.loaded/xhr.total * 100) + '% loaded');
+      },
+      // called when loading has errors
+      function (error) {
+        console.log('An error happened');
+      }
+    );
+
+    // box
+    var boxGeometry = new THREE.BoxGeometry(1, 1, 1);
+    var boxMaterial = new THREE.MeshNormalMaterial();
+    var boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+    scene.add(mainCamera);
+    mainCamera.add(boxMesh);
+    boxMesh.position.set(0, 0, -10);
+
+
+    // GridHelper
+    var size = 10;
+    var divisions = 10;
+    var gridHelper = new THREE.GridHelper(size, divisions);
+    gridHelper.name = "gridHelper";
+    gridHelper.visible = settings.isGridHelperVisible;
+    scene.add(gridHelper);
+
+    // - gridHelper
+    var guiFolderGridHelper = gui.addFolder('GridHelper');
+    guiFolderGridHelper.add(gridHelper, 'visible');
+    guiFolderGridHelper.open();
+
+    // debug
+    stats = new Stats();
+    stats.showPanel(0);
+    document.body.appendChild(stats.dom);
+
+  }
+
+  function animate() {
+    stats.begin();
+    controls.update();
+    cameraHelper.update();
+
+    renderer.clear();
+
+    // main camera
+    cameraHelper.visible = false;
+    renderer.setViewport(0, 0, window.innerWidth / 2.0, window.innerHeight);
+    renderer.render(scene, mainCamera);
+
+    // monitor camera
+    cameraHelper.visible = true;
+    renderer.setViewport(window.innerWidth / 2.0, 0, window.innerWidth / 2.0, window.innerHeight);
+    renderer.render(scene, monitorCamera);
+
+    stats.end();
+  	requestAnimationFrame(animate);
+  }
+
+  </script>
+</body>
+</html>
