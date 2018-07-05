@@ -101,7 +101,9 @@
 
       scene.add(meshBoxClone);
 
-      var dummyPlaneMeshClone = new THREE.Mesh(dummyPlaneMesh.geometry.clone(), dummyPlaneMesh.material.clone()); // have own material to have own color
+      var dummyPlaneMeshClone = dummyPlaneMesh.clone();
+      dummyPlaneMeshClone.material = dummyPlaneMesh.material.clone(); // have own material to have own color
+
       var randomColor = Math.random() * 0xffffff << 0;
       dummyPlaneMeshClone.material.color.setHex(randomColor);
       dummyPlaneMeshClone.quaternion.copy(meshBoxClone.quaternion);
@@ -133,6 +135,12 @@
       scene.add(planeHelper);
 
       meshBoxClone.material.clippingPlanes = [localPlaneClone];
+    }
+
+    this.addTest = function(){
+      for (var i = 0; i < 30; i++){
+        this.addBoxOnRandomStateWithClippingPlane();
+      }
     }
 
   };
@@ -248,6 +256,7 @@
     guiFolderBox.add(materialBox, 'opacity');
     guiFolderBox.add(settings, 'setBoxOnRandomState');
     guiFolderBox.add(settings, 'addBoxOnRandomStateWithClippingPlane');
+    guiFolderBox.add(settings, 'addTest');
     guiFolderBox.open();
 
     // instantiate a loader
