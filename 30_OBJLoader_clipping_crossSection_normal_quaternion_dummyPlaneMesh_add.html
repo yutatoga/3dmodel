@@ -35,6 +35,9 @@
     // dummy plane mesh
     this.dummyPlaneMaterialOpacity = 1.0;
 
+    // debug sphere
+    this.debugSphereGeometry = new THREE.SphereGeometry(0.1, 32, 32);
+
     // points
     this.isPointsVisible = true;
 
@@ -118,9 +121,8 @@
 
       function putDebugShere(positionArray, sphereColor){
         for (var i = 0; i < positionArray.length; i++){
-          var debugSphereGeometry = new THREE.SphereGeometry(0.1, 32, 32);
           var debugSphereMaterial = new THREE.MeshPhongMaterial( { color: sphereColor } );
-          var debugSpehre = new THREE.Mesh(debugSphereGeometry, debugSphereMaterial);
+          var debugSpehre = new THREE.Mesh(settings.debugSphereGeometry, debugSphereMaterial);
           debugSpehre.position.copy(positionArray[i]);
           scene.add(debugSpehre);
         }
