@@ -32,6 +32,9 @@
     this.clippingPlaneConstant = 0.8;
     this.planeHelperVisible = false;
 
+    // dummy plane mesh
+    this.dummyPlaneMaterialOpacity = 1.0;
+
     // points
     this.isPointsVisible = true;
 
@@ -192,7 +195,7 @@
     var dummyPlaneGeometry = new THREE.PlaneGeometry(5, 5, 1, 1);
     var dummyPlaneMaterial = new THREE.MeshBasicMaterial({
       transparent: true,
-      opacity: 0.5,
+      opacity: settings.dummyPlaneMaterialOpacity,
       wireframe: true,
       color: 0x00ff00,
       side: THREE.DoubleSide
