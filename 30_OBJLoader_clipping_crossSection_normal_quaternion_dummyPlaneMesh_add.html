@@ -101,9 +101,7 @@
 
       scene.add(meshBoxClone);
 
-      var dummyPlaneMeshClone = dummyPlaneMesh.clone();
-      dummyPlaneMeshClone.geometry = dummyPlaneMesh.geometry.clone();
-      dummyPlaneMeshClone.material = dummyPlaneMesh.material.clone(); // have own material to have own color
+      var dummyPlaneMeshClone = new THREE.Mesh(dummyPlaneMesh.geometry.clone(), dummyPlaneMesh.material.clone()); // have own material to have own color
       var randomColor = Math.random() * 0xffffff << 0;
       dummyPlaneMeshClone.material.color.setHex(randomColor);
       dummyPlaneMeshClone.quaternion.copy(meshBoxClone.quaternion);
