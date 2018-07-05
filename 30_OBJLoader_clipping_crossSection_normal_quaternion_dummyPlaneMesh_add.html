@@ -84,7 +84,6 @@
     this.addBoxOnRandomStateWithClippingPlane = function(){
       var meshBoxClone = meshBox.clone();
       meshBoxClone.material = meshBox.material.clone(); // have own material to have own clipping planes.
-
       meshBoxClone.position.set(
         (Math.random() * 2 - 1) * this.boxOnRandomStatePositionRange,
         (Math.random() * 2 - 1) * this.boxOnRandomStatePositionRange,
@@ -97,11 +96,12 @@
       scene.add(meshBoxClone);
 
       var dummyPlaneMeshClone = dummyPlaneMesh.clone();
+      dummyPlaneMeshClone.material = dummyPlaneMesh.material.clone(); // have own material to have own color
+      var randomColor = Math.random() * 0xffffff << 0;
+      dummyPlaneMeshClone.material.color.setHex(randomColor);
       dummyPlaneMeshClone.quaternion.copy(meshBoxClone.quaternion);
       dummyPlaneMeshClone.position.copy(meshBoxClone.position); // wip <<
       scene.add(dummyPlaneMeshClone);
-
-      console.log("foo", dummyPlaneMeshClone);
 
       var localPlaneClone = new THREE.Plane();
 
@@ -109,25 +109,20 @@
       var coplanarPointB = dummyPlaneMeshClone.geometry.vertices[1].applyQuaternion(dummyPlaneMeshClone.quaternion).add(dummyPlaneMeshClone.position); // dummyPlaneMeshClone.localToWorld(dummyPlaneMeshClone.geometry.vertices[1])
       var coplanarPointC = dummyPlaneMeshClone.geometry.vertices[2].applyQuaternion(dummyPlaneMeshClone.quaternion).add(dummyPlaneMeshClone.position); // dummyPlaneMeshClone.localToWorld(dummyPlaneMeshClone.geometry.vertices[2])
 
-
-      function putDebugShere(positionArray){
-        var randomColor = Math.random() * 0xffffff << 0;
+      function putDebugShere(positionArray, sphereColor){
         for (var i = 0; i < positionArray.length; i++){
           var debugSphereGeometry = new THREE.SphereGeometry(0.1, 32, 32);
-          var debugSphereMaterial = new THREE.MeshPhongMaterial( { color: randomColor } );
+          var debugSphereMaterial = new THREE.MeshPhongMaterial( { color: sphereColor } );
           var debugSpehre = new THREE.Mesh(debugSphereGeometry, debugSphereMaterial);
           debugSpehre.position.copy(positionArray[i]);
           scene.add(debugSpehre);
         }
       }
 
-      putDebugShere([coplanarPointA, coplanarPointB, coplanarPointC]);
-
-
+      putDebugShere([coplanarPointA, coplanarPointB, coplanarPointC], randomColor);
 
       localPlaneClone.setFromCoplanarPoints(coplanarPointA, coplanarPointB, coplanarPointC);
       console.log(localPlaneClone);
-
       // // helper to visualize the clipping plane
       // var planeHelper = new THREE.PlaneHelper(localPlaneClone, 10, 0xff0000);
       // planeHelper.visible = settings.planeHelperVisible;
