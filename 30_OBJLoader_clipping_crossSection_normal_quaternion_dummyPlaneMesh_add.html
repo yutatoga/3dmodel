@@ -21,6 +21,9 @@
   <script>
 
   var Settings = function(){
+    // camera
+    this.cameraPosition = new THREE.Vector3(0, 1.5, 10.5);
+
     // mesh
     this.isMeshVisible = true;
     this.enableWireframe = false;
@@ -65,7 +68,7 @@
       new THREE.Color(0x000000)
     ];
 
-    this.boxOnRandomStatePositionRange = 3.0;
+    this.boxOnRandomStatePositionRange = 5.0;
     this.setBoxOnRandomState = function(){
       meshBox.position.set(
         (Math.random() * 2 - 1) * this.boxOnRandomStatePositionRange,
@@ -121,14 +124,14 @@
 
       putDebugShere([coplanarPointA, coplanarPointB, coplanarPointC], randomColor);
 
-      localPlaneClone.setFromCoplanarPoints(coplanarPointA, coplanarPointB, coplanarPointC);
-      console.log(localPlaneClone);
-      // // helper to visualize the clipping plane
+      // localPlaneClone.setFromCoplanarPoints(coplanarPointA, coplanarPointB, coplanarPointC);
+      // // ahelper to visualize the clipping plane
       // var planeHelper = new THREE.PlaneHelper(localPlaneClone, 10, 0xff0000);
       // planeHelper.visible = settings.planeHelperVisible;
       // scene.add(planeHelper);
 
-      meshBoxClone.material.clippingPlanes = [localPlaneClone];
+      // meshBoxClone.material.clippingPlanes = [localPlaneClone];
+      meshBoxClone.material.clippingPlanes = [];
     }
 
   };
@@ -153,7 +156,7 @@
 
     // camera
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.01, 1000);
-    camera.position.set(0, 1.5, 5.5);
+    camera.position.copy(settings.cameraPosition);
 
     // renderer
     renderer = new THREE.WebGLRenderer({
