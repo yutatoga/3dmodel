@@ -102,18 +102,19 @@
       scene.add(meshBoxClone);
 
       var dummyPlaneMeshClone = dummyPlaneMesh.clone();
+      dummyPlaneMeshClone.geometry = dummyPlaneMesh.geometry.clone();
       dummyPlaneMeshClone.material = dummyPlaneMesh.material.clone(); // have own material to have own color
       var randomColor = Math.random() * 0xffffff << 0;
       dummyPlaneMeshClone.material.color.setHex(randomColor);
       dummyPlaneMeshClone.quaternion.copy(meshBoxClone.quaternion);
-      dummyPlaneMeshClone.position.copy(meshBoxClone.position); // wip <<
+      dummyPlaneMeshClone.position.copy(meshBoxClone.position);
       scene.add(dummyPlaneMeshClone);
 
       var localPlaneClone = new THREE.Plane();
 
-      var coplanarPointA = dummyPlaneMeshClone.geometry.vertices[0].applyQuaternion(dummyPlaneMeshClone.quaternion).add(dummyPlaneMeshClone.position); // dummyPlaneMeshClone.localToWorld(dummyPlaneMeshClone.geometry.vertices[0])
-      var coplanarPointB = dummyPlaneMeshClone.geometry.vertices[1].applyQuaternion(dummyPlaneMeshClone.quaternion).add(dummyPlaneMeshClone.position); // dummyPlaneMeshClone.localToWorld(dummyPlaneMeshClone.geometry.vertices[1])
-      var coplanarPointC = dummyPlaneMeshClone.geometry.vertices[2].applyQuaternion(dummyPlaneMeshClone.quaternion).add(dummyPlaneMeshClone.position); // dummyPlaneMeshClone.localToWorld(dummyPlaneMeshClone.geometry.vertices[2])
+      var coplanarPointA = dummyPlaneMeshClone.geometry.clone().vertices[0].applyQuaternion(dummyPlaneMeshClone.quaternion).add(dummyPlaneMeshClone.position); // dummyPlaneMeshClone.localToWorld(dummyPlaneMeshClone.geometry.vertices[0])
+      var coplanarPointB = dummyPlaneMeshClone.geometry.clone().vertices[1].applyQuaternion(dummyPlaneMeshClone.quaternion).add(dummyPlaneMeshClone.position); // dummyPlaneMeshClone.localToWorld(dummyPlaneMeshClone.geometry.vertices[1])
+      var coplanarPointC = dummyPlaneMeshClone.geometry.clone().vertices[2].applyQuaternion(dummyPlaneMeshClone.quaternion).add(dummyPlaneMeshClone.position); // dummyPlaneMeshClone.localToWorld(dummyPlaneMeshClone.geometry.vertices[2])
 
       function putDebugShere(positionArray, sphereColor){
         for (var i = 0; i < positionArray.length; i++){
@@ -127,14 +128,13 @@
 
       putDebugShere([coplanarPointA, coplanarPointB, coplanarPointC], randomColor);
 
-      // localPlaneClone.setFromCoplanarPoints(coplanarPointA, coplanarPointB, coplanarPointC);
-      // // ahelper to visualize the clipping plane
-      // var planeHelper = new THREE.PlaneHelper(localPlaneClone, 10, 0xff0000);
-      // planeHelper.visible = settings.planeHelperVisible;
-      // scene.add(planeHelper);
+      localPlaneClone.setFromCoplanarPoints(coplanarPointA, coplanarPointB, coplanarPointC);
+      // helper to visualize the clipping plane
+      var planeHelper = new THREE.PlaneHelper(localPlaneClone, 10, 0xff0000);
+      planeHelper.visible = settings.planeHelperVisible;
+      scene.add(planeHelper);
 
-      // meshBoxClone.material.clippingPlanes = [localPlaneClone];
-      meshBoxClone.material.clippingPlanes = [];
+      meshBoxClone.material.clippingPlanes = [localPlaneClone];
     }
 
   };
