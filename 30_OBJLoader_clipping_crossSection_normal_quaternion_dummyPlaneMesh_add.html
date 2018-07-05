@@ -109,26 +109,19 @@
       var coplanarPointB = dummyPlaneMeshClone.geometry.vertices[1].applyQuaternion(dummyPlaneMeshClone.quaternion).add(dummyPlaneMeshClone.position); // dummyPlaneMeshClone.localToWorld(dummyPlaneMeshClone.geometry.vertices[1])
       var coplanarPointC = dummyPlaneMeshClone.geometry.vertices[2].applyQuaternion(dummyPlaneMeshClone.quaternion).add(dummyPlaneMeshClone.position); // dummyPlaneMeshClone.localToWorld(dummyPlaneMeshClone.geometry.vertices[2])
 
-      var geometry1 = new THREE.SphereGeometry(0.1, 32, 32);
-      var material1 = new THREE.MeshBasicMaterial( {color: 0xff0000} );
-      var sphere1 = new THREE.Mesh( geometry1, material1);
-      sphere1.position.copy(coplanarPointA);
-      console.log("dou", dummyPlaneMeshClone.localToWorld(dummyPlaneMeshClone.geometry.vertices[0]));
-      console.log("coplanarPointA", coplanarPointA);
-      scene.add(sphere1);
 
-      var geometry2 = new THREE.SphereGeometry(0.1, 32, 32);
-      var material2 = new THREE.MeshBasicMaterial( {color: 0xff0000} );
-      var sphere2 = new THREE.Mesh( geometry2, material2);
-      sphere2.position.copy(coplanarPointB);
-      scene.add(sphere2);
+      function putDebugShere(positionArray){
+        var randomColor = Math.random() * 0xffffff << 0;
+        for (var i = 0; i < positionArray.length; i++){
+          var debugSphereGeometry = new THREE.SphereGeometry(0.1, 32, 32);
+          var debugSphereMaterial = new THREE.MeshPhongMaterial( { color: randomColor } );
+          var debugSpehre = new THREE.Mesh(debugSphereGeometry, debugSphereMaterial);
+          debugSpehre.position.copy(positionArray[i]);
+          scene.add(debugSpehre);
+        }
+      }
 
-      var geometry3 = new THREE.SphereGeometry(0.1, 32, 32);
-      var material3 = new THREE.MeshBasicMaterial( {color: 0xff0000} );
-      var sphere3 = new THREE.Mesh( geometry3, material3);
-      sphere3.position.copy(coplanarPointC);
-      scene.add(sphere3);
-
+      putDebugShere([coplanarPointA, coplanarPointB, coplanarPointC]);
 
 
 
@@ -188,12 +181,14 @@
     controls.autoRotateSpeed = 0.2; // default is 2.0
 
     // light
-    var light = new THREE.DirectionalLight(0xffffff);
-    light.position.set(0, 1, 0);
-    scene.add(light);
+    var directionalLight = new THREE.DirectionalLight(0xffffff);
+    directionalLight.position.set(0, 1, 0);
+    scene.add(directionalLight);
     var guiFolderLight = gui.addFolder('Light');
-    guiFolderLight.add(light, 'intensity', 0, 10);
+    guiFolderLight.add(directionalLight, 'intensity', 0, 10);
 
+    var ambientLight = new THREE.AmbientLight(0x505050);
+    scene.add(ambientLight);
 
     // dummy dummyPlaneMesh
     var dummyPlaneGeometry = new THREE.PlaneGeometry(5, 5, 1, 1);
