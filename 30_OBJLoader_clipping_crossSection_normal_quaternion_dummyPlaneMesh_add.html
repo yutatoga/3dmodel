@@ -62,7 +62,7 @@
     // box
     this.BOX_SIZE = 2.0;
     this.isBoxInitiallyVisible = true;
-    this.initialBoxOpacity = 0.5;
+    this.initialBoxOpacity = 1.0;
     this.colors = [
       new THREE.Color(0xffffff),
       new THREE.Color(0xffff00),
@@ -143,6 +143,12 @@
       for (var i = 0; i < 30; i++){
         this.addBoxOnRandomStateWithClippingPlane();
       }
+    }
+
+    this.useTextureLoader = function(){
+      let loader = new THREE.TextureLoader();
+      meshBox.material.map = loader.load("/img/lenna.png")
+      meshBox.material.needsUpdate = true
     }
 
   };
@@ -259,6 +265,7 @@
     guiFolderBox.add(settings, 'setBoxOnRandomState');
     guiFolderBox.add(settings, 'addBoxOnRandomStateWithClippingPlane');
     guiFolderBox.add(settings, 'addTest');
+    guiFolderBox.add(settings, 'useTextureLoader');
     guiFolderBox.open();
 
     // instantiate a loader
