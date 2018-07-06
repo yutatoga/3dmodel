@@ -139,12 +139,6 @@
       meshBoxClone.material.clippingPlanes = [localPlaneClone];
     }
 
-    this.addTest = function(){
-      for (var i = 0; i < 30; i++){
-        this.addBoxOnRandomStateWithClippingPlane();
-      }
-    }
-
     this.useTextureLoader = function(){
       let loader = new THREE.TextureLoader();
       meshBox.material.map = loader.load("/img/lenna.png")
@@ -264,7 +258,6 @@
     guiFolderBox.add(materialBox, 'opacity');
     guiFolderBox.add(settings, 'setBoxOnRandomState');
     guiFolderBox.add(settings, 'addBoxOnRandomStateWithClippingPlane');
-    guiFolderBox.add(settings, 'addTest');
     guiFolderBox.add(settings, 'useTextureLoader');
     guiFolderBox.open();
 
