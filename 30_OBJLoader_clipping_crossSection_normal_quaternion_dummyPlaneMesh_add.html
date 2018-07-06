@@ -128,9 +128,9 @@
         }
       }
 
-      putDebugShere([coplanarPointA, coplanarPointB, coplanarPointC], randomColor);
+      putDebugShere([coplanarPointA, coplanarPointC, coplanarPointB], randomColor);
+      localPlaneClone.setFromCoplanarPoints(coplanarPointA, coplanarPointC, coplanarPointB); // counter-clockwise
 
-      localPlaneClone.setFromCoplanarPoints(coplanarPointA, coplanarPointB, coplanarPointC);
       // helper to visualize the clipping plane
       var planeHelper = new THREE.PlaneHelper(localPlaneClone, 10, 0xff0000);
       planeHelper.visible = settings.planeHelperVisible;
