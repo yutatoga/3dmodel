@@ -220,7 +220,7 @@
     guiFolderPlane.add(localPlane.normal, 'x').name("normal.x").step(0.01).listen();
     guiFolderPlane.add(localPlane.normal, 'y').name("normal.y").step(0.01).listen();
     guiFolderPlane.add(localPlane.normal, 'z').name("normal.z").step(0.01).listen();
-    guiFolderPlane.add(localPlane, 'constant').listen();
+    guiFolderPlane.add(localPlane, 'constant').step(0.01).listen();
     // helper to visualize the clipping plane
     var planeHelper = new THREE.PlaneHelper(localPlane, 10, 0xffff00);
     planeHelper.visible = settings.planeHelperVisible;
