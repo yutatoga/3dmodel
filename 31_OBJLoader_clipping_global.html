@@ -26,6 +26,7 @@
 
     // clipping
     this.clippingPlaneConstant = 0.8;
+    this.globalPlaneHelperVisible = true;
     this.localPlaneHelperVisible = true;
 
     // points
@@ -64,6 +65,10 @@
 
     globalClippingPlane = new THREE.Plane();
     renderer.clippingPlanes = [globalClippingPlane];
+    // - helper
+    var globalPlaneHelper = new THREE.PlaneHelper(globalClippingPlane, 2, 0xff00ff);
+    globalPlaneHelper.visible = settings.globalPlaneHelperVisible;
+    scene.add(globalPlaneHelper);
 
     document.body.appendChild(renderer.domElement);
 
@@ -181,6 +186,10 @@
     guiFolderGlobalClipping.add(globalClippingPlane.normal, 'y').name('normal.y').step(0.01);
     guiFolderGlobalClipping.add(globalClippingPlane.normal, 'z').name('normal.z').step(0.01);
     guiFolderGlobalClipping.open();
+
+    var guiFolderGlobalPlaneHelper = gui.addFolder('globalPlaneHelper');
+    guiFolderGlobalPlaneHelper.add(globalPlaneHelper, 'visible');
+    guiFolderGlobalPlaneHelper.open();
 
     // - local clipping
     var guiFolderLocalClipping = gui.addFolder('Local Clipping');
